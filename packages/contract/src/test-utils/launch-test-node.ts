@@ -5,53 +5,60 @@ import type {
   SetupTestProviderAndWalletsReturn,
 } from '@fuel-ts/account/test-utils';
 import { FuelError } from '@fuel-ts/errors';
-import type { BytesLike } from '@fuel-ts/interfaces';
-import type { Contract } from '@fuel-ts/program';
 import type { SnapshotConfigs } from '@fuel-ts/utils';
 import { readFileSync } from 'fs';
 import * as path from 'path';
 import { mergeDeepRight } from 'ramda';
 
-import type { DeployContractOptions } from '../contract-factory';
+import type { DeployContractOptions, DeployContractResult } from '../contract-factory';
 
-interface ContractDeployer {
-  deployContract(
-    bytecode: BytesLike,
-    wallet: Account,
-    options?: DeployContractOptions
-  ): Promise<Contract>;
+export interface DeployableContractFactory {
+  deploy(wallet: Account, options?: DeployContractOptions): Promise<DeployContractResult>;
 }
 
-interface DeployContractConfig {
-  /**
-   * Contract deployer object compatible with factories outputted by `pnpm fuels typegen`.
-   */
-  deployer: ContractDeployer;
-  /**
-   * Contract bytecode. It can be generated via `pnpm fuels typegen`.
-   */
-  bytecode: BytesLike;
-  /**
-   * Options for contract deployment taken from `ContractFactory`.
-   */
-  options?: DeployContractOptions;
-  /**
-   * Index of wallet to be used for deployment. Defaults to `0` (first wallet).
-   */
-  walletIndex?: number;
-}
+export type DeployContractConfig =
+  | DeployableContractFactory
+  | {
+      /**
+       * Contract factory class outputted by `pnpm fuels typegen`.
+       */
+      factory: DeployableContractFactory;
+      /**
+       * Options for contract deployment taken from `ContractFactory`.
+       */
+      options?: DeployContractOptions;
+      /**
+       * Index of wallet to be used for deployment. Defaults to `0` (first wallet).
+       */
+      walletIndex?: number;
+    };
 
-interface LaunchTestNodeOptions<TContractConfigs extends DeployContractConfig[]>
+export interface LaunchTestNodeOptions<TContractConfigs extends DeployContractConfig[]>
   extends LaunchCustomProviderAndGetWalletsOptions {
   /**
    * Pass in either the path to the contract's root directory to deploy the contract or use `DeployContractConfig` for more control.
    */
   contractsConfigs: TContractConfigs;
 }
-type TContracts<T extends DeployContractConfig[]> = {
-  [K in keyof T]: Awaited<ReturnType<T[K]['deployer']['deployContract']>>;
+
+type ExtractDeployedContract<
+  T extends DeployContractConfig,
+  Deploy extends DeployableContractFactory['deploy'] = T extends DeployableContractFactory
+    ? T['deploy']
+    : T extends {
+          factory: DeployableContractFactory;
+        }
+      ? T['factory']['deploy']
+      : never,
+  WaitForResult extends DeployContractResult['waitForResult'] = Awaited<
+    ReturnType<Deploy>
+  >['waitForResult'],
+> = Awaited<ReturnType<WaitForResult>>['contract'];
+
+export type TContracts<T extends DeployContractConfig[]> = {
+  [K in keyof T]: ExtractDeployedContract<T[K]>;
 };
-interface LaunchTestNodeReturn<TFactories extends DeployContractConfig[]>
+export interface LaunchTestNodeReturn<TFactories extends DeployContractConfig[]>
   extends SetupTestProviderAndWalletsReturn {
   contracts: TContracts<TFactories>;
 }
@@ -113,7 +120,7 @@ function getFuelCoreArgs<TFactories extends DeployContractConfig[]>(
 }
 
 function getWalletForDeployment(config: DeployContractConfig, wallets: WalletUnlocked[]) {
-  if (!config.walletIndex) {
+  if (!('walletIndex' in config) || !config.walletIndex) {
     return wallets[0];
   }
 
@@ -129,7 +136,7 @@ function getWalletForDeployment(config: DeployContractConfig, wallets: WalletUnl
   return wallets[config.walletIndex];
 }
 
-export async function launchTestNode<TFactories extends DeployContractConfig[]>({
+export async function launchTestNode<const TFactories extends DeployContractConfig[]>({
   providerOptions = {},
   walletsConfig = {},
   nodeOptions = {},
@@ -152,13 +159,11 @@ export async function launchTestNode<TFactories extends DeployContractConfig[]>(
   try {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
-      contracts.push(
-        await config.deployer.deployContract(
-          config.bytecode,
-          getWalletForDeployment(config, wallets),
-          config.options ?? {}
-        )
-      );
+      const deploy = 'factory' in config ? config.factory.deploy : config.deploy;
+      const options = 'factory' in config ? (config.options ?? {}) : {};
+      const { waitForResult } = await deploy(getWalletForDeployment(config, wallets), options);
+      const { contract } = await waitForResult();
+      contracts.push(contract);
     }
   } catch (err) {
     cleanup();

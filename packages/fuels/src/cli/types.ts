@@ -1,3 +1,4 @@
+import type { JsonAbi } from '@fuel-ts/abi-coder';
 import type { DeployContractOptions } from '@fuel-ts/contract';
 
 export enum Commands {
@@ -12,32 +13,48 @@ export enum Commands {
 export type CommandEvent =
   | {
       type: Commands.build;
-      data: unknown;
+      data: void;
     }
   | {
       type: Commands.deploy;
-      data: DeployedContract[];
+      data: DeployedData;
     }
   | {
       type: Commands.dev;
-      data: unknown;
+      data: void;
     }
   | {
       type: Commands.init;
-      data: unknown;
+      data: void;
     }
   | {
       type: Commands.versions;
-      data: unknown;
+      data: void;
     }
   | {
       type: Commands.node;
-      data: unknown;
+      data: void;
     };
 
 export type DeployedContract = {
   name: string;
   contractId: string;
+};
+
+export type DeployedScript = {
+  path: string;
+  loaderBytecode: Uint8Array;
+  abi: JsonAbi;
+};
+
+export type DeployedPredicate = DeployedScript & {
+  predicateRoot: string;
+};
+
+export type DeployedData = {
+  contracts?: DeployedContract[];
+  scripts?: DeployedScript[];
+  predicates?: DeployedPredicate[];
 };
 
 export type ContractDeployOptions = {
@@ -49,6 +66,11 @@ export type ContractDeployOptions = {
 export type OptionsFunction = (
   options: ContractDeployOptions
 ) => DeployContractOptions | Promise<DeployContractOptions>;
+
+export type FuelsEventListener<CType extends Commands> = (
+  config: FuelsConfig,
+  data: Extract<CommandEvent, { type: CType }>['data']
+) => void | Promise<void>;
 
 export type UserFuelsConfig = {
   /** Relative directory path to Forc workspace */
@@ -70,7 +92,7 @@ export type UserFuelsConfig = {
 
   /**
    * Contracts will be deployed using this provider.
-   * Default: http://localhost:4000
+   * Default: http://localhost:4000/v1/graphql
    */
   providerUrl?: string;
 
@@ -109,18 +131,40 @@ export type UserFuelsConfig = {
   forcBuildFlags?: string[];
 
   /**
-   * Function callback, will be called after a successful run
-   * @param event - The event that triggered this execution
+   * Function callback, will be called after a successful build operation
+   *
    * @param config - The loaded `fuels.config.ts`
    */
-  onSuccess?: (event: CommandEvent, config: FuelsConfig) => void;
+  onBuild?: FuelsEventListener<Commands.build>;
+
+  /**
+   * Function callback, will be called after a successful deploy operation
+   *
+   * @param config - The loaded `fuels.config.ts`
+   * @param data - the deployed contracts
+   */
+  onDeploy?: FuelsEventListener<Commands.deploy>;
+
+  /**
+   * Function callback, will be called after a successful dev operation
+   *
+   * @param config - The loaded `fuels.config.ts`
+   */
+  onDev?: FuelsEventListener<Commands.dev>;
+
+  /**
+   * Function callback, will be called after a successful Node refresh operation
+   *
+   * @param config - The loaded `fuels.config.ts`
+   */
+  onNode?: FuelsEventListener<Commands.node>;
 
   /**
    * Function callback, will be called in case of errors
-   * @param error - Original error object
    * @param config - Configuration in use
+   * @param error - Original error object
    */
-  onFailure?: (event: Error, config: FuelsConfig) => void;
+  onFailure?: (config: FuelsConfig, error: Error) => void | Promise<void>;
 };
 
 export type FuelsConfig = UserFuelsConfig &

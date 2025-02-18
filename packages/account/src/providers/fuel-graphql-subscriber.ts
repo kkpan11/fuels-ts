@@ -2,6 +2,8 @@ import { ErrorCode, FuelError } from '@fuel-ts/errors';
 import type { DocumentNode } from 'graphql';
 import { print } from 'graphql';
 
+import { assertGqlResponseHasNoErrors } from './utils/handle-gql-error-message';
+
 type FuelGraphQLSubscriberOptions = {
   url: string;
   query: DocumentNode;
@@ -10,14 +12,13 @@ type FuelGraphQLSubscriberOptions = {
 };
 
 export class FuelGraphqlSubscriber implements AsyncIterator<unknown> {
-  private stream!: ReadableStreamDefaultReader<Uint8Array>;
+  public static incompatibleNodeVersionMessage: string | false = false;
   private static textDecoder = new TextDecoder();
 
-  public constructor(private options: FuelGraphQLSubscriberOptions) {}
+  private constructor(private stream: ReadableStreamDefaultReader<Uint8Array>) {}
 
-  private async setStream() {
-    const { url, query, variables, fetchFn } = this.options;
-
+  public static async create(options: FuelGraphQLSubscriberOptions) {
+    const { url, query, variables, fetchFn } = options;
     const response = await fetchFn(`${url}-sub`, {
       method: 'POST',
       body: JSON.stringify({
@@ -31,28 +32,51 @@ export class FuelGraphqlSubscriber implements AsyncIterator<unknown> {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.stream = response.body!.getReader();
+    const [backgroundStream, resultStream] = response.body!.tee();
+
+    // eslint-disable-next-line no-void
+    void this.readInBackground(backgroundStream.getReader());
+
+    const [errorReader, resultReader] = resultStream.tee().map((stream) => stream.getReader());
+
+    /**
+     * If the node threw an error, read it and throw it to the user
+     * Else just discard the response and return the subscriber below,
+     * which will have that same response via `resultReader`
+     */
+    await new FuelGraphqlSubscriber(errorReader).next();
+
+    return new FuelGraphqlSubscriber(resultReader);
+  }
+
+  /**
+   * Reads the stream in the background,
+   * thereby preventing the stream from not being read
+   * if the user ignores the subscription.
+   * Even though the read data is ignored in this function,
+   * it is still available in the other streams
+   * via internal mechanisms related to teeing.
+   */
+  private static async readInBackground(reader: ReadableStreamDefaultReader<Uint8Array>) {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { done } = await reader.read();
+      if (done) {
+        return;
+      }
+    }
   }
 
   private events: Array<{ data: unknown; errors?: { message: string }[] }> = [];
   private parsingLeftover = '';
 
   async next(): Promise<IteratorResult<unknown, unknown>> {
-    if (!this.stream) {
-      await this.setStream();
-    }
-
     // eslint-disable-next-line no-constant-condition
     while (true) {
       if (this.events.length > 0) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { data, errors } = this.events.shift()!;
-        if (Array.isArray(errors)) {
-          throw new FuelError(
-            FuelError.CODES.INVALID_REQUEST,
-            errors.map((err) => err.message).join('\n\n')
-          );
-        }
+        assertGqlResponseHasNoErrors(errors, FuelGraphqlSubscriber.incompatibleNodeVersionMessage);
         return { value: data, done: false };
       }
       const { value, done } = await this.stream.read();
@@ -73,7 +97,6 @@ export class FuelGraphqlSubscriber implements AsyncIterator<unknown> {
         .replace(':keep-alive-text\n\n', '');
 
       if (decoded === '') {
-        // eslint-disable-next-line no-continue
         continue;
       }
 
@@ -100,10 +123,8 @@ export class FuelGraphqlSubscriber implements AsyncIterator<unknown> {
   /**
    * Gets called when `break` is called in a `for-await-of` loop.
    */
-  async return(): Promise<IteratorResult<unknown, undefined>> {
-    await this.stream.cancel();
-    this.stream.releaseLock();
-    return { done: true, value: undefined };
+  return(): Promise<IteratorResult<unknown, undefined>> {
+    return Promise.resolve({ done: true, value: undefined });
   }
 
   [Symbol.asyncIterator](): AsyncIterator<unknown, unknown, undefined> {

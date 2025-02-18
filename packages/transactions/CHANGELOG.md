@@ -1,5 +1,344 @@
 # Change Log
 
+## 0.99.0
+
+### Patch Changes
+
+- 56adcc5: chore: fix version resolutions
+- Updated dependencies [86b8e94]
+- Updated dependencies [69e1ba8]
+- Updated dependencies [d1825c9]
+- Updated dependencies [56adcc5]
+- Updated dependencies [b3bb765]
+  - @fuel-ts/address@0.99.0
+  - @fuel-ts/abi-coder@0.99.0
+  - @fuel-ts/utils@0.99.0
+  - @fuel-ts/errors@0.99.0
+  - @fuel-ts/math@0.99.0
+  - @fuel-ts/hasher@0.99.0
+
+## 0.98.0
+
+### Minor Changes
+
+- 254bf53: chore!: remove receipts deprecated properties
+- f132203: chore!: remove receipt coders
+
+### Patch Changes
+
+- 12e801e: chore: dependency pinning and auditing
+- 0b4c3ab: chore!: redistributed the `@fuel-ts/interfaces` package
+- Updated dependencies [12e801e]
+- Updated dependencies [a7eb9b6]
+- Updated dependencies [4ccc628]
+- Updated dependencies [08a31d8]
+- Updated dependencies [0b4c3ab]
+  - @fuel-ts/abi-coder@0.98.0
+  - @fuel-ts/address@0.98.0
+  - @fuel-ts/hasher@0.98.0
+  - @fuel-ts/utils@0.98.0
+  - @fuel-ts/math@0.98.0
+  - @fuel-ts/errors@0.98.0
+
+## 0.97.2
+
+### Patch Changes
+
+- Updated dependencies [0970bc4]
+- Updated dependencies [896bf5b]
+- Updated dependencies [ebe5ecd]
+  - @fuel-ts/utils@0.97.2
+  - @fuel-ts/abi-coder@0.97.2
+  - @fuel-ts/address@0.97.2
+  - @fuel-ts/hasher@0.97.2
+  - @fuel-ts/errors@0.97.2
+  - @fuel-ts/math@0.97.2
+  - @fuel-ts/interfaces@0.97.2
+
+## 0.97.1
+
+### Patch Changes
+
+- Updated dependencies [c904a98]
+- Updated dependencies [27e8808]
+  - @fuel-ts/abi-coder@0.97.1
+  - @fuel-ts/address@0.97.1
+  - @fuel-ts/math@0.97.1
+  - @fuel-ts/interfaces@0.97.1
+  - @fuel-ts/errors@0.97.1
+  - @fuel-ts/utils@0.97.1
+  - @fuel-ts/hasher@0.97.1
+
+## 0.97.0
+
+### Patch Changes
+
+- 1226ac3: chore: fix receipts properties and deprecate incorrect ones
+- Updated dependencies [9dba357]
+  - @fuel-ts/errors@0.97.0
+  - @fuel-ts/utils@0.97.0
+  - @fuel-ts/abi-coder@0.97.0
+  - @fuel-ts/address@0.97.0
+  - @fuel-ts/math@0.97.0
+  - @fuel-ts/hasher@0.97.0
+  - @fuel-ts/interfaces@0.97.0
+
+## 0.96.1
+
+### Patch Changes
+
+- Updated dependencies [4ae041e]
+- Updated dependencies [bdfd009]
+- Updated dependencies [987aed3]
+  - @fuel-ts/address@0.96.1
+  - @fuel-ts/math@0.96.1
+  - @fuel-ts/errors@0.96.1
+  - @fuel-ts/utils@0.96.1
+  - @fuel-ts/abi-coder@0.96.1
+  - @fuel-ts/hasher@0.96.1
+  - @fuel-ts/interfaces@0.96.1
+
+## 0.96.0
+
+### Patch Changes
+
+- Updated dependencies [5bf6621]
+  - @fuel-ts/address@0.96.0
+  - @fuel-ts/abi-coder@0.96.0
+  - @fuel-ts/errors@0.96.0
+  - @fuel-ts/hasher@0.96.0
+  - @fuel-ts/interfaces@0.96.0
+  - @fuel-ts/math@0.96.0
+  - @fuel-ts/utils@0.96.0
+
+## 0.95.0
+
+### Patch Changes
+
+- Updated dependencies [b733e81]
+- Updated dependencies [bf14023]
+- Updated dependencies [f7afa04]
+  - @fuel-ts/math@0.95.0
+  - @fuel-ts/address@0.95.0
+  - @fuel-ts/interfaces@0.95.0
+  - @fuel-ts/errors@0.95.0
+  - @fuel-ts/utils@0.95.0
+  - @fuel-ts/abi-coder@0.95.0
+  - @fuel-ts/hasher@0.95.0
+
+## 0.94.9
+
+### Patch Changes
+
+- @fuel-ts/errors@0.94.9
+- @fuel-ts/utils@0.94.9
+- @fuel-ts/abi-coder@0.94.9
+- @fuel-ts/address@0.94.9
+- @fuel-ts/math@0.94.9
+- @fuel-ts/hasher@0.94.9
+- @fuel-ts/interfaces@0.94.9
+
+## 0.94.8
+
+### Patch Changes
+
+- @fuel-ts/abi-coder@0.94.8
+- @fuel-ts/address@0.94.8
+- @fuel-ts/errors@0.94.8
+- @fuel-ts/hasher@0.94.8
+- @fuel-ts/interfaces@0.94.8
+- @fuel-ts/math@0.94.8
+- @fuel-ts/utils@0.94.8
+
+## 0.94.7
+
+### Patch Changes
+
+- 80df900: chore: fix exported types
+- 3668a26: fix: add missing receipts properties
+- Updated dependencies [48db506]
+- Updated dependencies [80df900]
+- Updated dependencies [600b781]
+  - @fuel-ts/abi-coder@0.94.7
+  - @fuel-ts/interfaces@0.94.7
+  - @fuel-ts/address@0.94.7
+  - @fuel-ts/errors@0.94.7
+  - @fuel-ts/hasher@0.94.7
+  - @fuel-ts/utils@0.94.7
+  - @fuel-ts/math@0.94.7
+
+## 0.94.6
+
+### Patch Changes
+
+- 99d39e9: feat: introduce upload and upgrade transaction request
+- Updated dependencies [a9f31ca]
+- Updated dependencies [9719c1b]
+- Updated dependencies [aef7282]
+  - @fuel-ts/abi-coder@0.94.6
+  - @fuel-ts/address@0.94.6
+  - @fuel-ts/hasher@0.94.6
+  - @fuel-ts/errors@0.94.6
+  - @fuel-ts/math@0.94.6
+  - @fuel-ts/utils@0.94.6
+  - @fuel-ts/interfaces@0.94.6
+
+## 0.94.5
+
+### Patch Changes
+
+- 37eab14: chore: deprecate all receipt coders
+  - @fuel-ts/errors@0.94.5
+  - @fuel-ts/utils@0.94.5
+  - @fuel-ts/abi-coder@0.94.5
+  - @fuel-ts/address@0.94.5
+  - @fuel-ts/math@0.94.5
+  - @fuel-ts/hasher@0.94.5
+  - @fuel-ts/interfaces@0.94.5
+
+## 0.94.4
+
+### Patch Changes
+
+- Updated dependencies [a059ea1]
+- Updated dependencies [482bbf0]
+  - @fuel-ts/errors@0.94.4
+  - @fuel-ts/utils@0.94.4
+  - @fuel-ts/abi-coder@0.94.4
+  - @fuel-ts/address@0.94.4
+  - @fuel-ts/math@0.94.4
+  - @fuel-ts/hasher@0.94.4
+  - @fuel-ts/interfaces@0.94.4
+
+## 0.94.3
+
+### Patch Changes
+
+- a36626a: feat: added support for unknown txn types
+- e286557: fix: `UtxoIdCoder` output index to be `u16`
+- Updated dependencies [2b45e8d]
+  - @fuel-ts/abi-coder@0.94.3
+  - @fuel-ts/errors@0.94.3
+  - @fuel-ts/utils@0.94.3
+  - @fuel-ts/address@0.94.3
+  - @fuel-ts/math@0.94.3
+  - @fuel-ts/hasher@0.94.3
+  - @fuel-ts/interfaces@0.94.3
+
+## 0.94.2
+
+### Patch Changes
+
+- Updated dependencies [01e2f0e]
+- Updated dependencies [986a247]
+  - @fuel-ts/utils@0.94.2
+  - @fuel-ts/abi-coder@0.94.2
+  - @fuel-ts/address@0.94.2
+  - @fuel-ts/hasher@0.94.2
+  - @fuel-ts/errors@0.94.2
+  - @fuel-ts/math@0.94.2
+  - @fuel-ts/interfaces@0.94.2
+
+## 0.94.1
+
+### Patch Changes
+
+- Updated dependencies [9bba305]
+  - @fuel-ts/utils@0.94.1
+  - @fuel-ts/abi-coder@0.94.1
+  - @fuel-ts/address@0.94.1
+  - @fuel-ts/hasher@0.94.1
+  - @fuel-ts/errors@0.94.1
+  - @fuel-ts/interfaces@0.94.1
+  - @fuel-ts/math@0.94.1
+
+## 0.94.0
+
+### Minor Changes
+
+- 03ac550: feat!: `fuel-core@0.32.1` and large contract deployments
+
+### Patch Changes
+
+- 84dfdc5: chore: implement a helper createAssetId function
+- 1e93dac: chore: add missing reasons to `PANIC_REASONS` constant
+- Updated dependencies [d875416]
+- Updated dependencies [0110fd8]
+- Updated dependencies [4c653d0]
+- Updated dependencies [95e7108]
+- Updated dependencies [751d638]
+- Updated dependencies [1d2abd7]
+- Updated dependencies [a056da3]
+- Updated dependencies [9c07b00]
+- Updated dependencies [03ac550]
+  - @fuel-ts/abi-coder@0.94.0
+  - @fuel-ts/errors@0.94.0
+  - @fuel-ts/utils@0.94.0
+  - @fuel-ts/address@0.94.0
+  - @fuel-ts/math@0.94.0
+  - @fuel-ts/hasher@0.94.0
+  - @fuel-ts/interfaces@0.94.0
+
+## 0.93.0
+
+### Minor Changes
+
+- f3453b9: feat!: deploy contract validation
+
+### Patch Changes
+
+- Updated dependencies [d4c4e55]
+- Updated dependencies [f3453b9]
+  - @fuel-ts/interfaces@0.93.0
+  - @fuel-ts/errors@0.93.0
+  - @fuel-ts/utils@0.93.0
+  - @fuel-ts/abi-coder@0.93.0
+  - @fuel-ts/address@0.93.0
+  - @fuel-ts/hasher@0.93.0
+  - @fuel-ts/math@0.93.0
+
+## 0.92.1
+
+### Patch Changes
+
+- @fuel-ts/abi-coder@0.92.1
+- @fuel-ts/address@0.92.1
+- @fuel-ts/errors@0.92.1
+- @fuel-ts/hasher@0.92.1
+- @fuel-ts/interfaces@0.92.1
+- @fuel-ts/math@0.92.1
+- @fuel-ts/utils@0.92.1
+
+## 0.92.0
+
+### Patch Changes
+
+- @fuel-ts/errors@0.92.0
+- @fuel-ts/utils@0.92.0
+- @fuel-ts/abi-coder@0.92.0
+- @fuel-ts/address@0.92.0
+- @fuel-ts/hasher@0.92.0
+- @fuel-ts/math@0.92.0
+- @fuel-ts/interfaces@0.92.0
+
+## 0.91.0
+
+### Patch Changes
+
+- a9ece17: build: add support for latest node versions
+- Updated dependencies [a9ece17]
+- Updated dependencies [eec0806]
+- Updated dependencies [3be2251]
+- Updated dependencies [dddde62]
+- Updated dependencies [6d63732]
+  - @fuel-ts/interfaces@0.91.0
+  - @fuel-ts/abi-coder@0.91.0
+  - @fuel-ts/address@0.91.0
+  - @fuel-ts/errors@0.91.0
+  - @fuel-ts/hasher@0.91.0
+  - @fuel-ts/utils@0.91.0
+  - @fuel-ts/math@0.91.0
+
 ## 0.90.0
 
 ### Patch Changes

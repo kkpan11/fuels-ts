@@ -6,9 +6,9 @@ import type { ProviderOptions } from '../providers';
 import { Provider } from '../providers';
 import type { WalletUnlocked } from '../wallet';
 
-import { AssetId } from './asset-id';
 import type { LaunchNodeOptions } from './launchNode';
 import { launchNode } from './launchNode';
+import { TestAssetId } from './test-asset-id';
 import type { WalletsConfigOptions } from './wallet-config';
 import { WalletsConfig } from './wallet-config';
 
@@ -23,11 +23,12 @@ export interface LaunchCustomProviderAndGetWalletsOptions {
       snapshotConfig: PartialDeep<SnapshotConfigs>;
     }
   >;
+  launchNodeServerPort?: string;
 }
 
 const defaultWalletConfigOptions: WalletsConfigOptions = {
   count: 2,
-  assets: [AssetId.A, AssetId.B],
+  assets: [TestAssetId.A, TestAssetId.B],
   coinsPerAsset: 1,
   amountPerCoin: 10_000_000_000,
   messages: [],
@@ -52,32 +53,52 @@ export async function setupTestProviderAndWallets({
   walletsConfig: walletsConfigOptions = {},
   providerOptions,
   nodeOptions = {},
+  launchNodeServerPort = process.env.LAUNCH_NODE_SERVER_PORT || undefined,
 }: Partial<LaunchCustomProviderAndGetWalletsOptions> = {}): Promise<SetupTestProviderAndWalletsReturn> {
   // @ts-expect-error this is a polyfill (see https://devblogs.microsoft.com/typescript/announcing-typescript-5-2/#using-declarations-and-explicit-resource-management)
   Symbol.dispose ??= Symbol('Symbol.dispose');
   const walletsConfig = new WalletsConfig(
-    nodeOptions.snapshotConfig?.chainConfig?.consensus_parameters?.V1?.base_asset_id ??
-      defaultSnapshotConfigs.chainConfig.consensus_parameters.V1.base_asset_id,
+    nodeOptions.snapshotConfig?.chainConfig?.consensus_parameters?.V2?.base_asset_id ??
+      defaultSnapshotConfigs.chainConfig.consensus_parameters.V2.base_asset_id,
     {
       ...defaultWalletConfigOptions,
       ...walletsConfigOptions,
     }
   );
 
-  const { cleanup, url } = await launchNode({
+  const launchNodeOptions: LaunchNodeOptions = {
     loggingEnabled: false,
     ...nodeOptions,
     snapshotConfig: mergeDeepRight(
       defaultSnapshotConfigs,
       walletsConfig.apply(nodeOptions?.snapshotConfig)
     ),
-    port: '0',
-  });
+    port: nodeOptions.port || '0',
+  };
+
+  let cleanup: () => void;
+  let url: string;
+  if (launchNodeServerPort) {
+    const serverUrl = `http://localhost:${launchNodeServerPort}`;
+    url = await (
+      await fetch(serverUrl, { method: 'POST', body: JSON.stringify(launchNodeOptions) })
+    ).text();
+
+    cleanup = () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      fetch(`${serverUrl}/cleanup/${url}`);
+    };
+  } else {
+    const settings = await launchNode(launchNodeOptions);
+    url = settings.url;
+    cleanup = settings.cleanup;
+  }
 
   let provider: Provider;
 
   try {
-    provider = await Provider.create(url, providerOptions);
+    provider = new Provider(url, providerOptions);
+    await provider.init();
   } catch (err) {
     cleanup();
     throw err;

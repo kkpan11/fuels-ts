@@ -20,7 +20,7 @@ describe('cli.ts', () => {
       }
     });
 
-    const exit = vi.spyOn(process, 'exit').mockImplementation(vi.fn());
+    const exit = vi.spyOn(process, 'exit').mockImplementation(vi.fn() as never);
     const err = vi.spyOn(stderr, 'write').mockResolvedValue(true);
 
     return { exit, err, runTypegen };
@@ -164,7 +164,8 @@ describe('cli.ts', () => {
   test('should handle errors when running cli action', () => {
     const runTypegenError = new Error('Pretty message');
 
-    const { exit, err } = mockDeps({ runTypegenError });
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const { exit } = mockDeps({ runTypegenError });
 
     const inputs = ['*-no-abis-here.json'];
     const output = './aything';
@@ -175,6 +176,6 @@ describe('cli.ts', () => {
     });
 
     expect(exit).toBeCalledWith(1);
-    expect(err).toBeCalledWith(`error: ${runTypegenError.message}\n`);
+    expect(logSpy).toBeCalledWith(`error: ${runTypegenError.message}`);
   });
 });

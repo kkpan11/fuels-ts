@@ -2,7 +2,7 @@ import { Address } from '@fuel-ts/address';
 import { ZeroBytes32 } from '@fuel-ts/address/configs';
 import { randomBytes } from '@fuel-ts/crypto';
 import { bn, toNumber } from '@fuel-ts/math';
-import { TransactionType } from '@fuel-ts/transactions';
+import { TransactionType, UpgradePurposeTypeEnum } from '@fuel-ts/transactions';
 import { concat, hexlify } from '@fuel-ts/utils';
 import { ASSET_A, ASSET_B } from '@fuel-ts/utils/test-utils';
 
@@ -14,6 +14,8 @@ import Provider from '../provider';
 import type { CoinTransactionRequestInput } from './input';
 import { ScriptTransactionRequest } from './script-transaction-request';
 import type { TransactionRequestLike } from './types';
+import type { UpgradeTransactionRequest } from './upgrade-transaction-request';
+import type { UploadTransactionRequest } from './upload-transaction-request';
 import { transactionRequestify } from './utils';
 
 /**
@@ -119,17 +121,12 @@ describe('TransactionRequest', () => {
 
   it('adds account based witnesses', async () => {
     class ProviderCustom extends Provider {
-      // eslint-disable-next-line @typescript-eslint/require-await
-      static async create(url: string) {
-        return new ProviderCustom(url, {});
-      }
-
-      getChainId(): number {
-        return 1;
+      override async getChainId(): Promise<number> {
+        return Promise.resolve(1);
       }
     }
 
-    const provider = await ProviderCustom.create('nope');
+    const provider = new ProviderCustom('http://example.com');
     const signer = WalletUnlocked.generate({ provider });
     const txRequest = new ScriptTransactionRequest();
 
@@ -153,7 +150,7 @@ describe('TransactionRequest', () => {
 });
 
 describe('transactionRequestify', () => {
-  it('should keep data from input in transaction request created', () => {
+  it('should keep data from input in transaction request created [script]', () => {
     const script = Uint8Array.from([1, 2, 3, 4]);
     const scriptData = Uint8Array.from([5, 6]);
     const txRequestLike: TransactionRequestLike = {
@@ -185,11 +182,108 @@ describe('transactionRequestify', () => {
     expect(txRequest.witnesses).toEqual(txRequestLike.witnesses);
   });
 
-  it('should throw error if invalid transaction type', () => {
+  it('should throw error if unsupported transaction type', () => {
     const txRequestLike = {
-      type: 5,
+      type: 1234,
     };
 
-    expect(() => transactionRequestify(txRequestLike)).toThrow('Invalid transaction type: 5');
+    expect(() => transactionRequestify(txRequestLike)).toThrow(
+      'Unsupported transaction type: 1234'
+    );
+  });
+
+  it('should keep data from input in transaction request created [create]', () => {
+    const txRequestLike: TransactionRequestLike = {
+      type: TransactionType.Create,
+      bytecodeWitnessIndex: 1,
+      storageSlots: [],
+      salt: '0x1234',
+      tip: 1,
+      maturity: 1,
+      inputs: [],
+      outputs: [],
+      witnesses: [],
+    };
+    const txRequest = transactionRequestify(txRequestLike);
+
+    if (txRequest.type === TransactionType.Create) {
+      expect(txRequest.bytecodeWitnessIndex).toEqual(txRequestLike.bytecodeWitnessIndex);
+      expect(txRequest.salt).toEqual(txRequestLike.salt);
+      expect(txRequest.storageSlots).toEqual(txRequestLike.storageSlots);
+    }
+
+    expect(txRequest.type).toEqual(txRequestLike.type);
+    expect(txRequest.tip?.toNumber()).toEqual(txRequestLike.tip);
+    expect(txRequest.maturity).toEqual(txRequestLike.maturity);
+    expect(txRequest.inputs).toEqual(txRequestLike.inputs);
+    expect(txRequest.outputs).toEqual(txRequestLike.outputs);
+    expect(txRequest.witnesses).toEqual(txRequestLike.witnesses);
+  });
+
+  it('should keep data from input in transaction request created [blob]', () => {
+    const txRequestLike: TransactionRequestLike = {
+      type: TransactionType.Blob,
+      blobId: '0x1234',
+      witnessIndex: 1,
+      tip: 1,
+      maturity: 1,
+      inputs: [],
+      outputs: [],
+      witnesses: [],
+    };
+    const txRequest = transactionRequestify(txRequestLike);
+
+    if (txRequest.type === TransactionType.Blob) {
+      expect(txRequest.blobId).toEqual(txRequestLike.blobId);
+      expect(txRequest.witnessIndex).toEqual(txRequestLike.witnessIndex);
+    }
+
+    expect(txRequest.type).toEqual(txRequestLike.type);
+    expect(txRequest.tip?.toNumber()).toEqual(txRequestLike.tip);
+    expect(txRequest.maturity).toEqual(txRequestLike.maturity);
+    expect(txRequest.inputs).toEqual(txRequestLike.inputs);
+    expect(txRequest.outputs).toEqual(txRequestLike.outputs);
+    expect(txRequest.witnesses).toEqual(txRequestLike.witnesses);
+  });
+
+  it('should keep data from input in transaction request created [upgrade]', () => {
+    const txRequestLike: TransactionRequestLike = {
+      type: TransactionType.Upgrade,
+      inputs: [],
+      outputs: [],
+      bytecodeWitnessIndex: 0,
+      upgradePurpose: {
+        type: UpgradePurposeTypeEnum.ConsensusParameters,
+        checksum: ZeroBytes32,
+      },
+    };
+
+    const txRequest = transactionRequestify(txRequestLike) as UpgradeTransactionRequest;
+
+    expect(txRequest.upgradePurpose).toEqual(txRequestLike.upgradePurpose);
+    expect(txRequest.bytecodeWitnessIndex).toEqual(txRequestLike.bytecodeWitnessIndex);
+    expect(txRequest.upgradePurpose.type).toEqual(txRequestLike.upgradePurpose?.type);
+    expect(txRequest.type).toEqual(txRequestLike.type);
+  });
+
+  it('should keep data from input in transaction request created [upload]', () => {
+    const txRequestLike: TransactionRequestLike = {
+      type: TransactionType.Upload,
+      inputs: [],
+      outputs: [],
+      witnessIndex: 0,
+      subsection: {
+        root: ZeroBytes32,
+        subsectionIndex: 0,
+        subsectionsNumber: 1,
+        proofSet: [],
+      },
+    };
+
+    const txRequest = transactionRequestify(txRequestLike) as UploadTransactionRequest;
+
+    expect(txRequest.subsection).toEqual(txRequestLike.subsection);
+    expect(txRequest.witnessIndex).toEqual(txRequestLike.witnessIndex);
+    expect(txRequest.type).toEqual(txRequestLike.type);
   });
 });

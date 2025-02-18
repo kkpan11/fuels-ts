@@ -15,6 +15,7 @@ import {
   isTypeScript,
   isTypeUpgrade,
   isTypeUpload,
+  isTypeBlob,
 } from './operations';
 import { extractBurnedAssetsFromReceipts, extractMintedAssetsFromReceipts } from './receipt';
 import { processGraphqlStatus } from './status';
@@ -24,7 +25,7 @@ export interface AssembleTransactionSummaryParams {
   gasPerByte: BN;
   gasPriceFactor: BN;
   transaction: Transaction;
-  id?: string;
+  id: string;
   transactionBytes: Uint8Array;
   gqlTransactionStatus?: GraphqlTransactionStatus;
   receipts: TransactionResultReceipt[];
@@ -78,20 +79,21 @@ export function assembleTransactionSummary<TTransactionType = void>(
   const { isStatusFailure, isStatusPending, isStatusSuccess, blockId, status, time, totalFee } =
     processGraphqlStatus(gqlTransactionStatus);
 
-  const fee = calculateTXFeeForSummary({
-    totalFee,
-    gasPrice,
-    rawPayload,
-    tip,
-    consensusParameters: {
-      gasCosts,
-      maxGasPerTx,
-      feeParams: {
-        gasPerByte,
-        gasPriceFactor,
+  const fee =
+    totalFee ??
+    calculateTXFeeForSummary({
+      gasPrice,
+      rawPayload,
+      tip,
+      consensusParameters: {
+        gasCosts,
+        maxGasPerTx,
+        feeParams: {
+          gasPerByte,
+          gasPriceFactor,
+        },
       },
-    },
-  });
+    });
 
   const mintedAssets = extractMintedAssetsFromReceipts(receipts);
   const burnedAssets = extractBurnedAssetsFromReceipts(receipts);
@@ -120,6 +122,7 @@ export function assembleTransactionSummary<TTransactionType = void>(
     isTypeScript: isTypeScript(transaction.type),
     isTypeUpgrade: isTypeUpgrade(transaction.type),
     isTypeUpload: isTypeUpload(transaction.type),
+    isTypeBlob: isTypeBlob(transaction.type),
     isStatusFailure,
     isStatusSuccess,
     isStatusPending,

@@ -1,5 +1,5 @@
-import type { BytesLike } from '@fuel-ts/interfaces';
 import type { BN } from '@fuel-ts/math';
+import type { BytesLike } from '@fuel-ts/utils';
 
 import type { Option } from './OptionCoder';
 
@@ -26,9 +26,8 @@ export type DecodedValue =
   | { [key: string]: DecodedValue }
   | Record<string, Primitive>;
 
-export type TypesOfCoder<TCoder> = TCoder extends Coder<infer TInput, infer TDecoded>
-  ? { Input: TInput; Decoded: TDecoded }
-  : never;
+export type TypesOfCoder<TCoder> =
+  TCoder extends Coder<infer TInput, infer TDecoded> ? { Input: TInput; Decoded: TDecoded } : never;
 
 export abstract class Coder<TInput = unknown, TDecoded = unknown> {
   readonly name: string;

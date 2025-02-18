@@ -1,5 +1,70 @@
 # @internal/fuel-core
 
+## 0.89.8
+
+### Patch Changes
+
+- 45cc32e: chore: upgrade `fuel-core` to `0.40.4`
+
+## 0.89.7
+
+### Patch Changes
+
+- 04ca73e: chore: upgrade `fuel-core` to `0.40.2`
+
+## 0.89.6
+
+### Patch Changes
+
+- 165c49c: chore: bump `fuel-core` to `0.40.1`
+
+## 0.89.5
+
+### Patch Changes
+
+- 9dba357: chore: upgrading `fuel-core` to `0.40.0`
+
+## 0.89.4
+
+### Patch Changes
+
+- eb3b6c9: chore: upgrading `fuel-core` to `0.39.0`
+
+## 0.89.3
+
+### Patch Changes
+
+- d4e839f: chore: `fuel-core@0.37.1`, `forc@0.65.1`, and `create-fuels` toolchains
+- 735bb1c: chore: update `fuel-core` to `0.38.0`
+
+## 0.89.2
+
+### Patch Changes
+
+- 20d2ac2: chore: upgraded to fuel-core 0.36.0
+
+## 0.89.1
+
+### Patch Changes
+
+- ccd94fc: chore: upgrade `fuel-core@0.34.0`
+
+## 0.89.0
+
+### Minor Changes
+
+- 03ac550: feat!: `fuel-core@0.32.1` and large contract deployments
+
+### Patch Changes
+
+- 9309598: chore: upgrade `fuel-core@0.33.0`
+
+## 0.88.4
+
+### Patch Changes
+
+- 4a3c184: chore: upgrading `fuel-core` to `0.31.0`
+
 ## 0.88.3
 
 ### Patch Changes

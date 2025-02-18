@@ -1,23 +1,9 @@
 # Checking balances
 
-## Understanding the UTXO Model
+To check the balance of a specific asset, you can use [`getBalance`](DOCS_API_URL/classes/_fuel_ts_account.Account.html#getBalance) method. This function aggregates the amounts of all unspent coins of the given asset in your wallet.
 
-In UTXO (Unspent Transaction Output) based systems, each coin is unique, similar to how physical currency bills have different denominations.
+<<< @./snippets/checking-balances.ts#checking-balances-1{ts:line-numbers}
 
-A UTXO represents a coin with a specific amount, similar to having a $10 or $5 bill. It's crucial to understand this unique feature of UTXOs, as it differs significantly from Ethereum's account-based system.
+To retrieve the balances of all assets in your wallet, use the [`getBalances`](DOCS_API_URL/classes/_fuel_ts_account.Account.html#getBalances) method, it returns an array of [`CoinQuantity`](DOCS_API_URL/types/_fuel_ts_account.CoinQuantity.html). This is useful for getting a comprehensive view of your holdings.
 
-In Ethereum, balances are tracked as cumulative totals, similar to a bank account, rather than as distinct 'coins' or 'bills'.
-
-## Why UTXOs Matter
-
-Each UTXO corresponds to a unique coin and has an associated amount. This model allows for greater transparency and control in cryptocurrency transactions. Understanding UTXOs is key for effectively managing and tracking your digital assets.
-
-## Getting a Wallet's Balance
-
-To check the balance of a specific asset, you can use [`getBalance`](../../api/Account/Account.md#getbalance) method. This function aggregates the amounts of all unspent coins of the given asset in your wallet.
-
-<<< @/../../docs-snippets/src/guide/wallets/checking-balances.test.ts#checking-balances-1{ts:line-numbers}
-
-To retrieve the balances of all assets in your wallet, use the [`getBalances`](../../api/Account/Account.md#getbalances) method, it returns an array of [`CoinQuantity`](../../api/Account/index.md#coinquantity). This is useful for getting a comprehensive view of your holdings.
-
-<<< @/../../docs-snippets/src/guide/wallets/checking-balances.test.ts#checking-balances-2{ts:line-numbers}
+<<< @./snippets/checking-balances-two.ts#checking-balances-2{ts:line-numbers}

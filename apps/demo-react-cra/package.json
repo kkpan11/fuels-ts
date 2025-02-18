@@ -3,22 +3,22 @@
   "version": "0.1.29",
   "private": true,
   "dependencies": {
-    "@fuels/vm-asm": "0.54.0",
-    "@testing-library/react": "^13.4.0",
-    "@types/node": "^16.18.34",
-    "@types/react": "^18.2.9",
-    "@types/react-dom": "^18.2.4",
-    "eslint-config-react-app": "^7.0.1",
+    "@fuels/vm-asm": "0.58.2",
+    "@testing-library/react": "16.2.0",
+    "@types/node": "22.13.1",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "eslint-config-react-app": "7.0.1",
     "fuels": "workspace:*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-scripts": "5.0.1",
-    "typescript": "~5.2.2",
-    "web-vitals": "^2.1.4"
+    "typescript": "5.7.3",
+    "web-vitals": "2.1.4"
   },
   "scripts": {
     "original:start": "react-scripts start",
-    "original:build": "react-scripts build",
+    "original:build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "original:test": "react-scripts test",
     "original:eject": "react-scripts eject",
     "pretest": "pnpm original:build"
@@ -42,6 +42,6 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12"
+    "@types/jest": "29.5.14"
   }
 }

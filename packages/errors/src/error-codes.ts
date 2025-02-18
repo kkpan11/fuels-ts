@@ -19,9 +19,13 @@ export enum ErrorCode {
   INVALID_DATA = 'invalid-data',
   FUNCTION_NOT_FOUND = 'function-not-found',
   UNSUPPORTED_ENCODING_VERSION = 'unsupported-encoding-version',
+  TIMEOUT_EXCEEDED = 'timeout-exceeded',
+  CONFIG_FILE_NOT_FOUND = 'config-file-not-found',
+  CONFIG_FILE_ALREADY_EXISTS = 'config-file-already-exists',
+  WORKSPACE_NOT_DETECTED = 'workspace-not-detected',
 
   // address
-  INVALID_BECH32_ADDRESS = 'invalid-bech32-address',
+  INVALID_ADDRESS = 'invalid-address',
   INVALID_EVM_ADDRESS = 'invalid-evm-address',
   INVALID_B256_ADDRESS = 'invalid-b256-address',
 
@@ -31,6 +35,7 @@ export enum ErrorCode {
   MISSING_PROVIDER = 'missing-provider',
   INVALID_PROVIDER = 'invalid-provider',
   CONNECTION_REFUSED = 'connection-refused',
+  INVALID_URL = 'invalid-url',
 
   // wallet
   INVALID_PUBLIC_KEY = 'invalid-public-key',
@@ -52,9 +57,12 @@ export enum ErrorCode {
   MISSING_REQUIRED_PARAMETER = 'missing-required-parameter',
   INVALID_REQUEST = 'invalid-request',
   INVALID_TRANSFER_AMOUNT = 'invalid-transfer-amount',
+  NOT_ENOUGH_FUNDS = 'not-enough-funds',
 
   // crypto
   INVALID_CREDENTIALS = 'invalid-credentials',
+
+  /** @deprecated This error code is no longer used */
   HASHER_LOCKED = 'hasher-locked',
 
   // transaction
@@ -67,11 +75,18 @@ export enum ErrorCode {
   INVALID_TRANSACTION_INPUT = 'invalid-transaction-input',
   INVALID_TRANSACTION_OUTPUT = 'invalid-transaction-output',
   INVALID_TRANSACTION_STATUS = 'invalid-transaction-status',
-  INVALID_TRANSACTION_TYPE = 'invalid-transaction-type',
+  UNSUPPORTED_TRANSACTION_TYPE = 'unsupported-transaction-type',
   TRANSACTION_ERROR = 'transaction-error',
   INVALID_POLICY_TYPE = 'invalid-policy-type',
   DUPLICATED_POLICY = 'duplicated-policy',
   TRANSACTION_SQUEEZED_OUT = 'transaction-squeezed-out',
+  CONTRACT_SIZE_EXCEEDS_LIMIT = 'contract-size-exceeds-limit',
+  INVALID_CHUNK_SIZE_MULTIPLIER = 'invalid-chunk-size-multiplier',
+  MAX_INPUTS_EXCEEDED = 'max-inputs-exceeded',
+  FUNDS_TOO_LOW = 'funds-too-low',
+  MAX_OUTPUTS_EXCEEDED = 'max-outputs-exceeded',
+  MAX_COINS_REACHED = 'max-coins-reached',
+  ASSET_BURN_DETECTED = 'asset-burn-detected',
 
   // receipt
   INVALID_RECEIPT_TYPE = 'invalid-receipt-type',
@@ -88,14 +103,14 @@ export enum ErrorCode {
   ACCOUNT_REQUIRED = 'account-required',
   UNLOCKED_WALLET_REQUIRED = 'unlocked-wallet-required',
 
+  // bn
+  NUMBER_TOO_BIG = 'number-too-big',
+
   // chain
   ERROR_BUILDING_BLOCK_EXPLORER_URL = 'error-building-block-explorer-url',
 
   // docs
   VITEPRESS_PLUGIN_ERROR = 'vitepress-plugin-error',
-
-  // contract
-  INVALID_MULTICALL = 'invalid-multicall',
 
   // script
   SCRIPT_REVERTED = 'script-reverted',
@@ -103,4 +118,10 @@ export enum ErrorCode {
 
   // graphql
   STREAM_PARSING_ERROR = 'stream-parsing-error',
+
+  // launchNode
+  NODE_LAUNCH_FAILED = 'node-launch-failed',
+
+  // Unknown
+  UNKNOWN = 'unknown',
 }

@@ -1,10 +1,10 @@
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import type { UserConfig } from "vitest/config";
+import type { ViteUserConfig } from "vitest/config";
 import { mergeConfig, defineProject } from "vitest/config";
 
 import sharedConfig from "./vitest.shared.config.mts";
 
-const config: UserConfig = {
+const config: ViteUserConfig = {
   plugins: [
     nodePolyfills({
       globals: {
@@ -20,6 +20,9 @@ const config: UserConfig = {
         "timers/promises",
         "util",
         "stream",
+        "path",
+        "fs",
+        "os",
       ],
       overrides: {
         fs: "memfs",
@@ -27,17 +30,28 @@ const config: UserConfig = {
     }),
   ],
   optimizeDeps: {
-    exclude: ["fsevents", "path-scurry"],
+    exclude: [
+      "fsevents",
+      "path-scurry",
+      "@vitest/coverage-istanbul",
+      "chromium-bidi",
+    ],
     include: ["events", "timers/promises"],
+    entries: ["**/*.test.ts"],
   },
   test: {
+    env: {
+      LAUNCH_NODE_SERVER_PORT: "49342",
+    },
+    globalSetup: ["./vitest.global-browser-setup.ts"],
     coverage: {
       reportsDirectory: "coverage/environments/browser",
     },
     browser: {
+      provider: "playwright",
       headless: true,
       enabled: true,
-      name: "chrome",
+      name: "chromium",
     },
   },
 };

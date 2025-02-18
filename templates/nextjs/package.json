@@ -8,29 +8,39 @@
     "dev": "next dev",
     "build": "pnpm run xprebuild && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "run-s test:*",
+    "test:forc": "forc test --path ./sway-programs",
+    "test:e2e": "vitest",
+    "test:ui": "sh ./test/ui/test-ui.sh"
   },
   "dependencies": {
-    "@fuels/connectors": "^0.5.0",
-    "@fuels/react": "^0.20.0",
+    "@fuels/connectors": "0.36.1",
+    "@fuels/react": "0.36.1",
+    "@tanstack/react-query": "5.66.0",
+    "clsx": "2.1.1",
+    "dotenv": "16.4.7",
     "fuels": "workspace:*",
-    "@tanstack/react-query": "^5.29.2",
-    "dotenv": "^16.4.5",
-    "next": "14.2.2",
-    "react": "^18.2",
-    "react-dom": "^18.2",
-    "react-hot-toast": "^2.4.1",
-    "react-use": "^17.5.0"
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-toastify": "11.0.3"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18.2",
-    "@types/react-dom": "^18.2",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "@types/node": "22.13.1",
+    "@playwright/test": "1.50.1",
+    "@tailwindcss/postcss": "4.0.6",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.0",
+    "eslint-config-next": "15.1.6",
+    "postcss": "8.5.1",
+    "tailwindcss": "4.0.5",
+    "typescript": "5.7.3",
+    "vitest": "3.0.5"
+  },
+  "overrides": {
+    "whatwg-url": "14.1.0"
   }
 }

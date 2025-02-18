@@ -1,5 +1,297 @@
 # @fuel-ts/abi-typegen
 
+## 0.99.0
+
+### Patch Changes
+
+- 68e4b5a: chore: prevent naming collisions on typegen
+- Updated dependencies [ab56ded]
+- Updated dependencies [d1825c9]
+- Updated dependencies [b3bb765]
+- Updated dependencies [45cc32e]
+  - @fuel-ts/versions@0.99.0
+  - @fuel-ts/utils@0.99.0
+  - @fuel-ts/errors@0.99.0
+
+## 0.98.0
+
+### Patch Changes
+
+- 12e801e: chore: dependency pinning and auditing
+- 0b4c3ab: chore!: redistributed the `@fuel-ts/interfaces` package
+- Updated dependencies [12e801e]
+- Updated dependencies [04ca73e]
+- Updated dependencies [4ccc628]
+- Updated dependencies [08a31d8]
+- Updated dependencies [0b4c3ab]
+  - @fuel-ts/versions@0.98.0
+  - @fuel-ts/utils@0.98.0
+  - @fuel-ts/errors@0.98.0
+
+## 0.97.2
+
+### Patch Changes
+
+- Updated dependencies [0970bc4]
+- Updated dependencies [5ec254d]
+- Updated dependencies [896bf5b]
+- Updated dependencies [ebe5ecd]
+  - @fuel-ts/utils@0.97.2
+  - @fuel-ts/versions@0.97.2
+  - @fuel-ts/errors@0.97.2
+  - @fuel-ts/interfaces@0.97.2
+
+## 0.97.1
+
+### Patch Changes
+
+- 2cef020: fix: typegen and storage slots integration
+- c904a98: chore: added noImplicitOverride option to config
+- Updated dependencies [27e8808]
+- Updated dependencies [165c49c]
+  - @fuel-ts/interfaces@0.97.1
+  - @fuel-ts/errors@0.97.1
+  - @fuel-ts/versions@0.97.1
+  - @fuel-ts/utils@0.97.1
+
+## 0.97.0
+
+### Patch Changes
+
+- 4e057d5: chore: upgrading `forc` to `0.66.4`
+- Updated dependencies [9dba357]
+- Updated dependencies [4e057d5]
+- Updated dependencies [7c162de]
+  - @fuel-ts/versions@0.97.0
+  - @fuel-ts/errors@0.97.0
+  - @fuel-ts/utils@0.97.0
+  - @fuel-ts/interfaces@0.97.0
+
+## 0.96.1
+
+### Patch Changes
+
+- Updated dependencies [eb3b6c9]
+  - @fuel-ts/versions@0.96.1
+  - @fuel-ts/errors@0.96.1
+  - @fuel-ts/utils@0.96.1
+  - @fuel-ts/interfaces@0.96.1
+
+## 0.96.0
+
+### Patch Changes
+
+- @fuel-ts/errors@0.96.0
+- @fuel-ts/interfaces@0.96.0
+- @fuel-ts/utils@0.96.0
+- @fuel-ts/versions@0.96.0
+
+## 0.95.0
+
+### Patch Changes
+
+- 04578ed: fix: typegen factory template
+- Updated dependencies [d4e839f]
+- Updated dependencies [95a9650]
+- Updated dependencies [f7afa04]
+- Updated dependencies [735bb1c]
+  - @fuel-ts/versions@0.95.0
+  - @fuel-ts/interfaces@0.95.0
+  - @fuel-ts/errors@0.95.0
+  - @fuel-ts/utils@0.95.0
+
+## 0.94.9
+
+### Patch Changes
+
+- Updated dependencies [c2f0599]
+  - @fuel-ts/versions@0.94.9
+  - @fuel-ts/errors@0.94.9
+  - @fuel-ts/utils@0.94.9
+  - @fuel-ts/interfaces@0.94.9
+
+## 0.94.8
+
+### Patch Changes
+
+- @fuel-ts/errors@0.94.8
+- @fuel-ts/interfaces@0.94.8
+- @fuel-ts/utils@0.94.8
+- @fuel-ts/versions@0.94.8
+
+## 0.94.7
+
+### Patch Changes
+
+- 48db506: feat: support message types
+- 80df900: chore: fix exported types
+- 600b781: build(deps): bump the deps-patch group
+- Updated dependencies [47b5cd3]
+- Updated dependencies [431990d]
+- Updated dependencies [20d2ac2]
+- Updated dependencies [80df900]
+- Updated dependencies [127ade0]
+  - @fuel-ts/versions@0.94.7
+  - @fuel-ts/interfaces@0.94.7
+  - @fuel-ts/errors@0.94.7
+  - @fuel-ts/utils@0.94.7
+
+## 0.94.6
+
+### Patch Changes
+
+- a9f31ca: build(deps): bump the deps group across 1 directory with 38 updates
+- ccfa699: fix: storage slots auto-load from typegen
+- Updated dependencies [aef7282]
+  - @fuel-ts/errors@0.94.6
+  - @fuel-ts/utils@0.94.6
+  - @fuel-ts/interfaces@0.94.6
+  - @fuel-ts/versions@0.94.6
+
+## 0.94.5
+
+### Patch Changes
+
+- Updated dependencies [942b56b]
+- Updated dependencies [cffa075]
+  - @fuel-ts/versions@0.94.5
+  - @fuel-ts/errors@0.94.5
+  - @fuel-ts/utils@0.94.5
+  - @fuel-ts/interfaces@0.94.5
+
+## 0.94.4
+
+### Patch Changes
+
+- Updated dependencies [b00fd02]
+- Updated dependencies [a059ea1]
+- Updated dependencies [482bbf0]
+  - @fuel-ts/versions@0.94.4
+  - @fuel-ts/errors@0.94.4
+  - @fuel-ts/utils@0.94.4
+  - @fuel-ts/interfaces@0.94.4
+
+## 0.94.3
+
+### Patch Changes
+
+- Updated dependencies [b67ded2]
+  - @fuel-ts/versions@0.94.3
+  - @fuel-ts/errors@0.94.3
+  - @fuel-ts/utils@0.94.3
+  - @fuel-ts/interfaces@0.94.3
+
+## 0.94.2
+
+### Patch Changes
+
+- Updated dependencies [01e2f0e]
+- Updated dependencies [ccd94fc]
+- Updated dependencies [986a247]
+  - @fuel-ts/utils@0.94.2
+  - @fuel-ts/versions@0.94.2
+  - @fuel-ts/errors@0.94.2
+  - @fuel-ts/interfaces@0.94.2
+
+## 0.94.1
+
+### Patch Changes
+
+- 66c0454: fix: stop building `typegen` on `pretest` script
+- Updated dependencies [9bba305]
+  - @fuel-ts/utils@0.94.1
+  - @fuel-ts/errors@0.94.1
+  - @fuel-ts/interfaces@0.94.1
+  - @fuel-ts/versions@0.94.1
+
+## 0.94.0
+
+### Minor Changes
+
+- 799db38: feat!: prettify `typegen` api
+- 4c653d0: feat!: adding `abi` transpiler
+- 9c07b00: feat!: improve `()` and `Option<T>` type handling
+
+### Patch Changes
+
+- 29c556d: fix: typegen reporting the correct versions
+- 9156c02: fix: typegen generic configurables
+- a056da3: feat: improve typegen bytecode compression
+- Updated dependencies [9309598]
+- Updated dependencies [29c556d]
+- Updated dependencies [0110fd8]
+- Updated dependencies [4c653d0]
+- Updated dependencies [751d638]
+- Updated dependencies [1d2abd7]
+- Updated dependencies [a056da3]
+- Updated dependencies [03ac550]
+  - @fuel-ts/versions@0.94.0
+  - @fuel-ts/errors@0.94.0
+  - @fuel-ts/utils@0.94.0
+  - @fuel-ts/interfaces@0.94.0
+
+## 0.93.0
+
+### Patch Changes
+
+- 6b3df9d: build(deps): bump ramda and @types/ramda
+- 99794e4: chore: upgrading `forc` to `0.62.0`
+- 5b670a5: fix: make properties of configurables optional in typegen
+- ad9adcd: fix: export interfaces in typegen
+- Updated dependencies [99794e4]
+- Updated dependencies [d4c4e55]
+- Updated dependencies [f3453b9]
+  - @fuel-ts/versions@0.93.0
+  - @fuel-ts/interfaces@0.93.0
+  - @fuel-ts/errors@0.93.0
+  - @fuel-ts/utils@0.93.0
+
+## 0.92.1
+
+### Patch Changes
+
+- @fuel-ts/errors@0.92.1
+- @fuel-ts/interfaces@0.92.1
+- @fuel-ts/utils@0.92.1
+- @fuel-ts/versions@0.92.1
+
+## 0.92.0
+
+### Minor Changes
+
+- 17bd929: feat!: made `deployContract` a non-blocking call
+
+### Patch Changes
+
+- 369feef: build(deps): bump the deps group with 2 updates
+- 968ad03: chore: mimic `JsonAbi` interface from `abi-coder` in `abi-typegen`
+- Updated dependencies [638eae3]
+- Updated dependencies [4a3c184]
+- Updated dependencies [44d51ee]
+  - @fuel-ts/versions@0.92.0
+  - @fuel-ts/errors@0.92.0
+  - @fuel-ts/utils@0.92.0
+  - @fuel-ts/interfaces@0.92.0
+
+## 0.91.0
+
+### Patch Changes
+
+- 7befc6a: fix!: stop piping into `process.stdout/stderr` and use `console.log`
+- a9ece17: build: add support for latest node versions
+- a6c45fd: chore!: upgrade `commander` to`12.1.0`
+- 31764d6: build(deps): bump rimraf from 3.0.2 to 5.0.7
+- fbfe9b9: build(deps): bump handlebars from 4.7.7 to 4.7.8
+- Updated dependencies [a9ece17]
+- Updated dependencies [eec0806]
+- Updated dependencies [8676a9e]
+- Updated dependencies [dddde62]
+- Updated dependencies [6d63732]
+  - @fuel-ts/interfaces@0.91.0
+  - @fuel-ts/versions@0.91.0
+  - @fuel-ts/errors@0.91.0
+  - @fuel-ts/utils@0.91.0
+
 ## 0.90.0
 
 ### Minor Changes

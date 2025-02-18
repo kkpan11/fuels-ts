@@ -1,8 +1,8 @@
-import * as testUtilsMod from '@fuel-ts/account/test-utils';
 import { existsSync, rmSync } from 'fs';
 import { join } from 'path';
 
 import { fuelsConfig } from '../../../../test/fixtures/fuels.config';
+import * as testUtilsMod from '../../../test-utils';
 import type { FuelsConfig } from '../../types';
 
 import type { FuelCoreNode } from './autoStartFuelCore';
@@ -26,20 +26,23 @@ describe('autoStartFuelCore', () => {
     });
   });
 
-  function mockLaunchNode() {
+  function mockAll() {
     const launchNode = vi.spyOn(testUtilsMod, 'launchNode').mockReturnValue(
       Promise.resolve({
         cleanup: () => {},
         ip: '0.0.0.0',
         port: '4000',
+        url: 'http://127.0.0.1:4000/v1/graphql',
         snapshotDir: '/some/path',
+        pid: 1234,
       })
     );
-    return { launchNode };
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    return { launchNode, log };
   }
 
   test('should auto start `fuel-core`', async () => {
-    const { launchNode } = mockLaunchNode();
+    const { launchNode, log } = mockAll();
 
     const config = structuredClone(fuelsConfig);
     config.autoStartFuelCore = true;
@@ -47,10 +50,11 @@ describe('autoStartFuelCore', () => {
     await autoStartFuelCore(config);
 
     expect(launchNode).toHaveBeenCalledTimes(1);
+    expect(log).toHaveBeenCalledTimes(1);
   });
 
   test('should not start `fuel-core`', async () => {
-    const { launchNode } = mockLaunchNode();
+    const { launchNode, log } = mockAll();
 
     const config = structuredClone(fuelsConfig);
     config.autoStartFuelCore = false;
@@ -58,10 +62,11 @@ describe('autoStartFuelCore', () => {
     await autoStartFuelCore(config);
 
     expect(launchNode).toHaveBeenCalledTimes(0);
+    expect(log).toHaveBeenCalledTimes(0);
   });
 
   test('should start `fuel-core` node using custom binary', async () => {
-    const { launchNode } = mockLaunchNode();
+    const { launchNode, log } = mockAll();
 
     const copyConfig: FuelsConfig = structuredClone(fuelsConfig);
     copyConfig.fuelCorePath = 'fuels-core';
@@ -84,12 +89,13 @@ describe('autoStartFuelCore', () => {
         fuelCorePath: 'fuels-core',
       })
     );
+    expect(log).toHaveBeenCalledTimes(1);
 
     core.killChildProcess();
   });
 
   test('should start `fuel-core` node using system binary', async () => {
-    const { launchNode } = mockLaunchNode();
+    const { launchNode, log } = mockAll();
 
     const config = structuredClone(fuelsConfig);
     const core = (await autoStartFuelCore(config)) as FuelCoreNode;
@@ -101,6 +107,7 @@ describe('autoStartFuelCore', () => {
     expect(core.port).toBeGreaterThanOrEqual(4000);
     expect(core.providerUrl).toMatch(/http:\/\/127\.0\.0\.1:([0-9]+)\/v1\/graphql/);
     expect(core.killChildProcess).toBeTruthy();
+    expect(log).toHaveBeenCalledTimes(1);
 
     core.killChildProcess();
   });

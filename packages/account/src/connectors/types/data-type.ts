@@ -1,4 +1,7 @@
 import type { JsonAbi } from '@fuel-ts/abi-coder';
+import type { RequireAtLeastOne } from 'type-fest';
+
+import type { TransactionRequest } from '../../providers';
 
 /**
  * @name Version
@@ -29,8 +32,23 @@ export type Network = {
 };
 
 /**
+ * @name SelectNetworkArguments
+ *
+ * Select a network requires either the `chainId` or the `url`.
+ */
+export type SelectNetworkArguments = RequireAtLeastOne<Network, 'chainId' | 'url'>;
+
+/**
  * ABI that represents a binary code interface from Sway.
  *
  * Read more at: https://docs.fuel.network/docs/specs/abi/json-abi-format/
  */
 export type FuelABI = JsonAbi;
+
+/**
+ * Params for the sendTransaction method (for connectors).
+ */
+export type FuelConnectorSendTxParams = {
+  skipCustomFee?: boolean;
+  onBeforeSend?: (txRequest: TransactionRequest) => Promise<TransactionRequest>;
+};

@@ -1,14 +1,13 @@
 import { randomBytes } from '@fuel-ts/crypto';
 import { hashMessage } from '@fuel-ts/hasher';
-import type { BytesLike } from '@fuel-ts/interfaces';
+import type { BytesLike } from '@fuel-ts/utils';
 
 import walletSpec from '../../test/fixtures/wallet-spec';
 import { SCRIPT_TX_REQUEST, SIGNED_TX, PRIVATE_KEY } from '../../test/fixtures/wallet-unlocked';
-import { FUEL_NETWORK_URL } from '../configs';
 import * as providersMod from '../providers';
-import { Provider } from '../providers';
 import type { CallResult, TransactionResponse, TransactionRequestLike } from '../providers';
 import { Signer } from '../signer';
+import { setupTestProviderAndWallets } from '../test-utils';
 
 import { BaseWalletUnlocked } from './base-wallet-unlocked';
 import * as keystoreWMod from './keystore-wallet';
@@ -24,13 +23,15 @@ describe('WalletUnlocked', () => {
   const expectedPrivateKey = '0x5f70feeff1f229e4a95e1056e8b4d80d0b24b565674860cc213bdb07127ce1b1';
   const expectedPublicKey =
     '0x2f34bc0df4db0ec391792cedb05768832b49b1aa3a2dd8c30054d1af00f67d00b74b7acbbf3087c8e0b1a4c343db50aa471d21f278ff5ce09f07795d541fb47e';
-  const expectedAddress = 'fuel1785jcs4epy625cmjuv9u269rymmwv6s6q2y9jhnw877nj2j08ehqce3rxf';
+  const expectedAddress = '0xf1e92c42b90934aa6372e30bc568a326f6e66a1a0288595e6e3fbd392a4f3e6e';
   const expectedMessage = 'my message';
   const expectedSignedMessage =
     '0x8eeb238db1adea4152644f1cd827b552dfa9ab3f4939718bb45ca476d167c6512a656f4d4c7356bfb9561b14448c230c6e7e4bd781df5ee9e5999faa6495163d';
 
   it('Instantiate a new wallet', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = new WalletUnlocked(expectedPrivateKey, provider);
 
     expect(wallet.publicKey).toEqual(expectedPublicKey);
@@ -38,7 +39,9 @@ describe('WalletUnlocked', () => {
   });
 
   it('Sign a message using wallet instance', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = new WalletUnlocked(expectedPrivateKey, provider);
     const signedMessage = await wallet.signMessage(expectedMessage);
     const verifiedAddress = Signer.recoverAddress(hashMessage(expectedMessage), signedMessage);
@@ -48,24 +51,25 @@ describe('WalletUnlocked', () => {
   });
 
   it('Sign a transaction using wallet instance', async () => {
-    // #region wallet-transaction-signing
-    // #import { Provider, Wallet, Signer };
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
 
-    const provider = await Provider.create(FUEL_NETWORK_URL);
     const wallet = Wallet.fromPrivateKey(PRIVATE_KEY, provider);
     const signedTransaction = await wallet.signTransaction(SCRIPT_TX_REQUEST);
-    const chainId = wallet.provider.getChainId();
+    const chainId = await wallet.provider.getChainId();
     const verifiedAddress = Signer.recoverAddress(
       SCRIPT_TX_REQUEST.getTransactionId(chainId),
       signedTransaction
     );
-    // #endregion wallet-transaction-signing
+
     expect(signedTransaction).toEqual(SIGNED_TX);
     expect(verifiedAddress).toEqual(wallet.address);
   });
 
   it('Populate transaction witnesses signature using wallet instance', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = new WalletUnlocked(PRIVATE_KEY, provider);
     const signedTransaction = await wallet.signTransaction(SCRIPT_TX_REQUEST);
     const populatedTransaction =
@@ -75,7 +79,9 @@ describe('WalletUnlocked', () => {
   });
 
   it('Populate transaction multi-witnesses signature using wallet instance', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = new WalletUnlocked(PRIVATE_KEY, provider);
     const privateKey = randomBytes(32);
     const otherWallet = new WalletUnlocked(privateKey, provider);
@@ -92,7 +98,9 @@ describe('WalletUnlocked', () => {
   });
 
   it('Check if send transaction adds signature using wallet instance', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = new WalletUnlocked(PRIVATE_KEY, provider);
     let signature: BytesLike | undefined;
     // Intercept Provider.sendTransaction to collect signature
@@ -113,7 +121,9 @@ describe('WalletUnlocked', () => {
   });
 
   it('Generate a new random wallet', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = WalletUnlocked.generate({
       provider,
     });
@@ -128,7 +138,9 @@ describe('WalletUnlocked', () => {
   });
 
   it('Generate a new random wallet with entropy', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
+    using launched = await setupTestProviderAndWallets();
+    const { provider } = launched;
+
     const wallet = WalletUnlocked.generate({
       entropy: randomBytes(32),
       provider,
@@ -145,11 +157,13 @@ describe('WalletUnlocked', () => {
 
   describe('WalletUnlocked.fromSeed', () => {
     it('Create wallet from seed', async () => {
-      const provider = await Provider.create(FUEL_NETWORK_URL);
+      using launched = await setupTestProviderAndWallets();
+      const { provider } = launched;
+
       const wallet = WalletUnlocked.fromSeed(walletSpec.seed, walletSpec.account_1.path, provider);
 
       expect(wallet.publicKey).toBe(walletSpec.account_1.publicKey);
-      expect(wallet.provider.url).toBe(walletSpec.providerUrl);
+      expect(wallet.provider.url).toBeDefined();
     });
 
     it('Create wallet from seed with default path', () => {
@@ -189,11 +203,13 @@ describe('WalletUnlocked', () => {
 
   describe('WalletUnlocked.extendedKey', () => {
     it('Create wallet from extendedKey', async () => {
-      const provider = await Provider.create(FUEL_NETWORK_URL);
+      using launched = await setupTestProviderAndWallets();
+      const { provider } = launched;
+
       const wallet = WalletUnlocked.fromExtendedKey(walletSpec.account_0.xprv, provider);
 
       expect(wallet.publicKey).toBe(walletSpec.account_0.publicKey);
-      expect(wallet.provider.url).toBe(walletSpec.providerUrl);
+      expect(wallet.provider.url).toBeDefined();
     });
 
     it('Create wallet from extendedKey, without provider', () => {
@@ -205,10 +221,11 @@ describe('WalletUnlocked', () => {
   });
 
   it('Create wallet and lock it', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
-    const wallet = WalletUnlocked.generate({
-      provider,
-    });
+    using launched = await setupTestProviderAndWallets();
+    const {
+      wallets: [wallet],
+    } = launched;
+
     expect(wallet.privateKey).toBeTruthy();
     const lockedWallet = wallet.lock();
     expect(lockedWallet instanceof WalletLocked).toBeTruthy();
@@ -239,11 +256,10 @@ describe('WalletUnlocked', () => {
       .spyOn(BaseWalletUnlocked.prototype, 'populateTransactionWitnessesSignature')
       .mockImplementationOnce(() => Promise.resolve(transactionReq));
 
-    const provider = await Provider.create(FUEL_NETWORK_URL);
-
-    const wallet = WalletUnlocked.generate({
-      provider,
-    });
+    using launched = await setupTestProviderAndWallets();
+    const {
+      wallets: [wallet],
+    } = launched;
 
     const result = await wallet.simulateTransaction(transactionRequestLike);
 
@@ -262,10 +278,11 @@ describe('WalletUnlocked', () => {
   });
 
   it('encrypts wallet to keystore', async () => {
-    const provider = await Provider.create(FUEL_NETWORK_URL);
-    const wallet = WalletUnlocked.generate({
-      provider,
-    });
+    using launched = await setupTestProviderAndWallets();
+    const {
+      wallets: [wallet],
+    } = launched;
+
     const password = 'password';
 
     const encryptKeystoreWalletSpy = vi.spyOn(keystoreWMod, 'encryptKeystoreWallet');

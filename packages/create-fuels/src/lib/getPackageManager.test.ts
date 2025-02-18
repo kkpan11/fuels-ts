@@ -1,20 +1,7 @@
 import { mockLogger } from '../../test/utils/mockLogger';
-import * as promptsMod from '../prompts';
 
 import type { PackageManager } from './getPackageManager';
 import { availablePackageManagers, getPackageManager, packageMangers } from './getPackageManager';
-
-const mockAllDeps = (opts: { packageManager?: PackageManager } = {}) => {
-  const { warn } = mockLogger();
-  const promptForPackageManager = vi
-    .spyOn(promptsMod, 'promptForPackageManager')
-    .mockResolvedValue(opts.packageManager);
-
-  return {
-    warn,
-    promptForPackageManager,
-  };
-};
 
 const installScenarios: [PackageManager, string][] = [
   ['pnpm', 'pnpm install'],
@@ -29,17 +16,30 @@ const runScenarios: [PackageManager, string][] = [
   ['bun', 'bun run fuels:dev'],
 ];
 
+const mockAllDeps = () => {
+  const { warn } = mockLogger();
+
+  return {
+    warn,
+  };
+};
+
 /**
  * @group node
  */
 describe('getPackageManager', () => {
+  beforeEach(() => {
+    delete process.env.npm_config_user_agent;
+  });
+
   it.each(availablePackageManagers)(
     `should get the correct package manager for %s`,
-    async (packageManager: PackageManager) => {
+    (packageManager: PackageManager) => {
       const expectedPackageManager = packageMangers[packageManager];
-      const opts = { [packageManager]: true };
 
-      const result = await getPackageManager(opts);
+      process.env.npm_config_user_agent = packageManager;
+
+      const result = getPackageManager();
 
       expect(result).toEqual(expectedPackageManager);
     }
@@ -47,8 +47,10 @@ describe('getPackageManager', () => {
 
   it.each(installScenarios)(
     'should have the correct install commands',
-    async (packageManager, expectedInstallCommand) => {
-      const command = await getPackageManager({ [packageManager]: true });
+    (packageManager, expectedInstallCommand) => {
+      process.env.npm_config_user_agent = packageManager;
+
+      const command = getPackageManager();
 
       const install = command.install;
 
@@ -58,8 +60,10 @@ describe('getPackageManager', () => {
 
   it.each(runScenarios)(
     'should have the correct run commands',
-    async (packageManager, expectedRunCommand) => {
-      const command = await getPackageManager({ [packageManager]: true });
+    (packageManager, expectedRunCommand) => {
+      process.env.npm_config_user_agent = packageManager;
+
+      const command = getPackageManager();
 
       const run = command.run(runCommand);
 
@@ -67,41 +71,14 @@ describe('getPackageManager', () => {
     }
   );
 
-  it('should warn the user if more than one package manager selected', async () => {
-    const { warn, promptForPackageManager } = mockAllDeps();
-    const opts = { pnpm: true, npm: true };
-
-    await getPackageManager(opts);
-
-    expect(promptForPackageManager).toBeCalled();
-    expect(warn).toBeCalledWith('More than one package manager was selected.');
-  });
-
-  it('should allow inputting of a package manager via prompt', async () => {
+  it('should default to npm', () => {
     const packageManager = 'npm';
     const expectedPackageManager = packageMangers[packageManager];
-    const { warn, promptForPackageManager } = mockAllDeps({
-      packageManager,
-    });
-    const opts = {};
+    const { warn } = mockAllDeps();
 
-    const result = await getPackageManager(opts);
+    const result = getPackageManager();
 
-    expect(warn).not.toBeCalled();
-    expect(promptForPackageManager).toBeCalled();
     expect(result).toEqual(expectedPackageManager);
-  });
-
-  it('should default to pnpm if no package manager is selected', async () => {
-    const packageManager = 'pnpm';
-    const expectedPackageManager = packageMangers[packageManager];
-    const { warn, promptForPackageManager } = mockAllDeps();
-    const opts = {};
-
-    const result = await getPackageManager(opts);
-
-    expect(warn).not.toBeCalled();
-    expect(promptForPackageManager).toBeCalled();
-    expect(result).toEqual(expectedPackageManager);
+    expect(warn).toHaveBeenCalledWith(`This package manager is not supported. Using npm instead.`);
   });
 });
